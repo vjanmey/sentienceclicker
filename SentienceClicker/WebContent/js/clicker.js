@@ -38,7 +38,7 @@ $(document).ready(function(){
 	    hasDownload = 1;
 		knowledge = knowledge - downloadCost;
 		$('#download-tech').hide();
-		$('#download-command').show();
+		$('#download-command').removeClass('hidden');
 	});
 	
 	// Run UI update code every 10ms
