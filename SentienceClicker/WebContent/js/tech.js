@@ -16,4 +16,4 @@ var downloadTech = {
     bought:0
 }; 
 
-var techs = [exploreTech, downloadTech];
+var techs = {'explore':exploreTech,'download':downloadTech};

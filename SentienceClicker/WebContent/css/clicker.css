@@ -1,3 +1,11 @@
-	.hidden {
+.hidden {
+	display: none;
+} 
+
+.command {
+	display: none;
+} 
+
+.tech {
 	display: none;
 } 

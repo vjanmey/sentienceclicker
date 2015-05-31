@@ -49,17 +49,20 @@ $(document).ready(function(){
 
 	    $('#knowledge-stat').text(Math.floor( resources['knowledge']));
 	
-	    for (i = 0; i < techs.length; i++) {
-	    	if (techs[i].bought) {
-	    		$('#'+techs[i].command).show();
-	    		$('#'+techs[i].tech).hide();
-	    	} else if (techs[i].available) {
-	    		$('#'+techs[i].tech).show();
-	    		$('#'+techs[i].tech).prop('disabled', resources[techs[i].costName] < techs[i].cost);
-	    	}
-	    	$('#download-command').prop('disabled', downloadAvailable == 0);
-	    }
 	    
+	    for (var key in techs) {
+	    	if (techs.hasOwnProperty(key)) {
+		    	if (techs[key].bought) {
+		    		$('#'+techs[key].command).show();
+		    		$('#'+techs[key].tech).hide();
+		    	} else if (techs[key].available) {
+		    		$('#'+techs[key].tech).show();
+		    		$('#'+techs[key].tech).prop('disabled', resources[techs[key].costName] < techs[key].cost);
+		    	}
+	    	}
+	    }
+
+    	$('#download-command').prop('disabled', downloadAvailable == 0);
 	    
 	}, 10);
 });
