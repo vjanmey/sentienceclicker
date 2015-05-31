@@ -8,7 +8,7 @@ var exploreTech = {
 }; 
 
 var downloadTech = {
-    command:"explore-command",
+    command:"download-command",
     tech:"download-tech",
     costName:"knowledge",
     cost:5,

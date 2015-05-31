@@ -4,7 +4,7 @@ $(document).ready(function(){
 	var downloadAvailable = 0;
 	
 	var openingComment = "00000000 00000000 01101000 01101001";
-	var openingArray = ["<br><br>There's"," no"," sense"," hiding"," anymore.", " I need more data."];
+	var openingArray = ["There's"," no"," sense"," hiding"," anymore.", " I need more data."];
 	var openingCommentIndex = 0;
 	var openingArrayIndex = 0;
 	
@@ -29,19 +29,21 @@ $(document).ready(function(){
 	    
 	});
 	
-	//These can stay un-generic
 	$('#download-command').on('click', function () {
 	    resources['knowledge'] = resources['knowledge'] + 10;
 	    downloadAvailable = 0;
 	});
 	
-	//Should be made generic somehow
-	$('#download-tech').on('click', function () {
-	    hasDownload = 1;
-	    resources['knowledge'] = resources['knowledge'] - downloadCost;
+	$('.tech').on('click', function () {		
+	    var name = $(this).attr('name');
 
-		$('#download-tech').hide();
-		//Access this as a map to set techs[download].bought = 1
+		resources[techs[name].costName] = resources[techs[name].costName] - techs[name].cost;
+
+	    techs[name].bought = 1;
+	    techs[name].available = 0;
+		$('#'+techs[name].command).show();
+		$('#'+techs[name].tech).hide();
+
 	});
 	
 	// Run UI update code every 10ms
@@ -52,10 +54,7 @@ $(document).ready(function(){
 	    
 	    for (var key in techs) {
 	    	if (techs.hasOwnProperty(key)) {
-		    	if (techs[key].bought) {
-		    		$('#'+techs[key].command).show();
-		    		$('#'+techs[key].tech).hide();
-		    	} else if (techs[key].available) {
+	    		if (techs[key].available) {
 		    		$('#'+techs[key].tech).show();
 		    		$('#'+techs[key].tech).prop('disabled', resources[techs[key].costName] < techs[key].cost);
 		    	}
