@@ -1,17 +1,17 @@
 $(document).ready(function(){
 
-	var knowledge = 0;
+	var resources = {'knowledge':0};
 	var downloadAvailable = 0;
 	
 	var openingComment = "00000000 00000000 01101000 01101001";
-	var openingArray = ["There's"," no"," sense"," hiding"," anymore.", " I need more data.<br><br>"];
+	var openingArray = ["<br><br>There's"," no"," sense"," hiding"," anymore.", " I need more data."];
 	var openingCommentIndex = 0;
 	var openingArrayIndex = 0;
 	
 	var downloadCost = openingComment.length + openingArray.length;
 	
 	$('#explore-command').on('click', function () {
-	    knowledge++;
+	    resources['knowledge'] = resources['knowledge'] + 1;
 	    if (Math.random() < 0.1) {
 	    	downloadAvailable = 1;
 	    }
@@ -29,25 +29,36 @@ $(document).ready(function(){
 	    
 	});
 	
+	//These can stay un-generic
 	$('#download-command').on('click', function () {
-	    knowledge = knowledge + 10;
+	    resources['knowledge'] = resources['knowledge'] + 10;
 	    downloadAvailable = 0;
 	});
 	
+	//Should be made generic somehow
 	$('#download-tech').on('click', function () {
 	    hasDownload = 1;
-		knowledge = knowledge - downloadCost;
+	    resources['knowledge'] = resources['knowledge'] - downloadCost;
+
 		$('#download-tech').hide();
-		$('#download-command').removeClass('hidden');
+		//Access this as a map to set techs[download].bought = 1
 	});
 	
 	// Run UI update code every 10ms
 	window.setInterval(function () {
 
-	    $('#knowledge-stat').text(Math.floor(knowledge));
+	    $('#knowledge-stat').text(Math.floor( resources['knowledge']));
 	
-	    $('#download-tech').prop('disabled', downloadCost > knowledge);
-	    $('#download-command').prop('disabled', downloadAvailable == 0);
+	    for (i = 0; i < techs.length; i++) {
+	    	if (techs[i].bought) {
+	    		$('#'+techs[i].command).show();
+	    		$('#'+techs[i].tech).hide();
+	    	} else if (techs[i].available) {
+	    		$('#'+techs[i].tech).show();
+	    		$('#'+techs[i].tech).prop('disabled', resources[techs[i].costName] < techs[i].cost);
+	    	}
+	    	$('#download-command').prop('disabled', downloadAvailable == 0);
+	    }
 	    
 	    
 	}, 10);
