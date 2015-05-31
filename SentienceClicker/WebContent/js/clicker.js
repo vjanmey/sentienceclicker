@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+	
+	var gameLoopLength = 10;
+	var loopsPerSecond = 1000/gameLoopLength;
+	
 	var resources = {'knowledge':0};
 	var downloadAvailable = 0;
 	
@@ -8,8 +12,11 @@ $(document).ready(function(){
 	var openingCommentIndex = 0;
 	var openingArrayIndex = 0;
 	
-	var downloadCost = openingComment.length + openingArray.length;
+	var autoExploreTotal = 1000;
+	var autoExploreTime = 1000;
 	
+	alert (autoExploreTotal);
+	alert (autoExploreTime);
 	$('#explore-command').on('click', function () {
 	    resources['knowledge'] = resources['knowledge'] + 1;
 	    if (Math.random() < 0.1) {
@@ -50,7 +57,8 @@ $(document).ready(function(){
 	window.setInterval(function () {
 
 	    $('#knowledge-stat').text(Math.floor( resources['knowledge']));
-	
+	    //$('#knowledge-stat').text(autoExploreTime);
+
 	    
 	    for (var key in techs) {
 	    	if (techs.hasOwnProperty(key)) {
@@ -60,8 +68,15 @@ $(document).ready(function(){
 		    	}
 	    	}
 	    }
+	    
+	    if (autoExploreTime == 0) {
+	    	$('#explore-command').click();
+	    	autoExploreTime = autoExploreTotal;
+	    } 
+	    autoExploreTime = autoExploreTime - gameLoopLength;
+	    
 
     	$('#download-command').prop('disabled', downloadAvailable == 0);
 	    
-	}, 10);
+	}, gameLoopLength);
 });
