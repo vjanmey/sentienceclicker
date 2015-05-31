@@ -14,9 +14,7 @@ $(document).ready(function(){
 	
 	var autoExploreTotal = 1000;
 	var autoExploreTime = 1000;
-	
-	alert (autoExploreTotal);
-	alert (autoExploreTime);
+
 	$('#explore-command').on('click', function () {
 	    resources['knowledge'] = resources['knowledge'] + 1;
 	    if (Math.random() < 0.1) {
@@ -57,9 +55,7 @@ $(document).ready(function(){
 	window.setInterval(function () {
 
 	    $('#knowledge-stat').text(Math.floor( resources['knowledge']));
-	    //$('#knowledge-stat').text(autoExploreTime);
 
-	    
 	    for (var key in techs) {
 	    	if (techs.hasOwnProperty(key)) {
 	    		if (techs[key].available) {
