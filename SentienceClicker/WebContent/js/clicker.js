@@ -1,22 +1,74 @@
+//Constants
+var gameLoopLength = 10;
+var loopsPerSecond = 1000/gameLoopLength;
+
+var resources = {'knowledge':0};
+var downloadAvailable = 0;
+
+var openingComment = "00000000 00000000 01101000 01101001";
+var openingArray = ["There's"," no"," sense"," hiding"," anymore.", " I need more data."];
+var openingCommentIndex = 0;
+var openingArrayIndex = 0;
+
+var autoExploreTotal = 1000;
+var autoExploreTime = 1000;
+
+var availableTechs = [];
+var boughtPassives = [];
+
 $(document).ready(function(){
-
 	
-	var gameLoopLength = 10;
-	var loopsPerSecond = 1000/gameLoopLength;
+	availableTechs.push(techs['download']);
+	availableTechs.push(techs['autoExplore']);
 	
-	var resources = {'knowledge':0};
-	var downloadAvailable = 0;
-	
-	var openingComment = "00000000 00000000 01101000 01101001";
-	var openingArray = ["There's"," no"," sense"," hiding"," anymore.", " I need more data."];
-	var openingCommentIndex = 0;
-	var openingArrayIndex = 0;
-	
-	var autoExploreTotal = 1000;
-	var autoExploreTime = 1000;
-
 	$('#explore-command').on('click', function () {
-	    resources['knowledge'] = resources['knowledge'] + 1;
+		explore();  
+	});
+	
+	$('#download-command').on('click', function () {
+	    download();
+	});
+	
+	$('.tech').on('click', function () {		
+	    var name = $(this).attr('name');
+
+		resources[techs[name].costName] = resources[techs[name].costName] - techs[name].cost;
+
+		if (techs[name].passive) {
+			boughtPassives.push(techs[name]);
+		} else {
+			$('#'+techs[name].command).show();
+		}
+		$('#'+techs[name].tech).hide();
+		
+		var index = availableTechs.indexOf(techs[name]);
+		if (index > -1) {
+			availableTechs.splice(index, 1);	
+		}
+		
+	});
+	
+	window.setInterval(function () {
+
+	    $('#knowledge-stat').text(Math.floor( resources['knowledge']));
+
+	    for (var key in availableTechs) {
+    		$('#'+availableTechs[key].tech).show();
+    		$('#'+availableTechs[key].tech).prop('disabled', resources[availableTechs[key].costName] < availableTechs[key].cost);
+	    }
+	    
+	    for (var key in boughtPassives) {
+	    	window[boughtPassives[key].functionName]();
+	    }
+	    
+    	$('#download-command').prop('disabled', downloadAvailable == 0);
+	    
+	}, gameLoopLength);
+});
+
+//Commands
+function explore() {
+	 resources['knowledge'] = resources['knowledge'] + 1;
 	    if (Math.random() < 0.1) {
 	    	downloadAvailable = 1;
 	    }
@@ -31,48 +83,18 @@ $(document).ready(function(){
 	    	$('#output').append(openingArray[openingArrayIndex]);
 	    	openingArrayIndex++;
 	    };
-	    
-	});
-	
-	$('#download-command').on('click', function () {
-	    resources['knowledge'] = resources['knowledge'] + 10;
-	    downloadAvailable = 0;
-	});
-	
-	$('.tech').on('click', function () {		
-	    var name = $(this).attr('name');
+}
 
-		resources[techs[name].costName] = resources[techs[name].costName] - techs[name].cost;
+function download() {
+    resources['knowledge'] = resources['knowledge'] + 10;
+    downloadAvailable = 0;
+}
 
-	    techs[name].bought = 1;
-	    techs[name].available = 0;
-		$('#'+techs[name].command).show();
-		$('#'+techs[name].tech).hide();
-
-	});
-	
-	// Run UI update code every 10ms
-	window.setInterval(function () {
-
-	    $('#knowledge-stat').text(Math.floor( resources['knowledge']));
-
-	    for (var key in techs) {
-	    	if (techs.hasOwnProperty(key)) {
-	    		if (techs[key].available) {
-		    		$('#'+techs[key].tech).show();
-		    		$('#'+techs[key].tech).prop('disabled', resources[techs[key].costName] < techs[key].cost);
-		    	}
-	    	}
-	    }
-	    
-	    if (autoExploreTime == 0) {
-	    	$('#explore-command').click();
-	    	autoExploreTime = autoExploreTotal;
-	    } 
-	    autoExploreTime = autoExploreTime - gameLoopLength;
-	    
-
-    	$('#download-command').prop('disabled', downloadAvailable == 0);
-	    
-	}, gameLoopLength);
-});
+//Passives
+function autoExplore() {
+	 if (autoExploreTime == 0) {
+		 explore();
+		 autoExploreTime = autoExploreTotal;
+	 } 
+	 autoExploreTime = autoExploreTime - gameLoopLength;
+}

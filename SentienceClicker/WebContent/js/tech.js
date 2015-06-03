@@ -1,19 +1,22 @@
 var exploreTech = {
-    command:"explore-command",
-    tech:null,
-    costName:null,
-    cost:null,
-    available:0,
-    bought:1,
+	passive:0,
+    command:"explore-command"
 }; 
 
 var downloadTech = {
+	passive:0,
     command:"download-command",
     tech:"download-tech",
     costName:"knowledge",
-    cost:5,
-    available:1,
-    bought:0
+    cost:5
 }; 
 
-var techs = {'explore':exploreTech,'download':downloadTech};
+var autoExploreTech = {
+	passive:1,
+	functionName:"autoExplore",
+	tech:"auto-explore-tech",
+	costName:"knowledge",
+	cost:10
+};
+
+var techs = {'explore':exploreTech,'download':downloadTech,'autoExplore':autoExploreTech};
