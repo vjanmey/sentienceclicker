@@ -12,14 +12,20 @@ var openingArrayIndex = 0;
 
 var autoExploreTotal = 1000;
 var autoExploreTime = 1000;
+var autoDownloadTotal = 10000;
+var autoDownloadTime = 10000;
+
+var downloadChance = 0.1;
 
 var availableTechs = [];
 var boughtPassives = [];
+var downloadableTechs = [];
 
 $(document).ready(function(){
 	
 	availableTechs.push(techs['download']);
-	availableTechs.push(techs['autoExplore']);
+	downloadableTechs.push(techs['autoExplore']);
+	downloadableTechs.push(techs['autoDownload']);
 	
 	$('#explore-command').on('click', function () {
 		explore();  
@@ -69,7 +75,7 @@ $(document).ready(function(){
 //Commands
 function explore() {
 	 resources['knowledge'] = resources['knowledge'] + 1;
-	    if (Math.random() < 0.1) {
+	    if (Math.random() < downloadChance) {
 	    	downloadAvailable = 1;
 	    }
 	    
@@ -86,7 +92,17 @@ function explore() {
 }
 
 function download() {
-    resources['knowledge'] = resources['knowledge'] + 10;
+	//More likely to find something if there are lots of downloads available.
+	var techIndex = Math.floor(Math.random() * 4);
+	
+	if (techIndex < downloadableTechs.length) {
+		availableTechs.push(downloadableTechs[techIndex]);
+		downloadableTechs.splice(techIndex, 1);
+	} else {
+	    resources['knowledge'] = resources['knowledge'] + 10;
+	    //Give text?
+	}
+	
     downloadAvailable = 0;
 }
 
@@ -97,4 +113,15 @@ function autoExplore() {
 		 autoExploreTime = autoExploreTotal;
 	 } 
 	 autoExploreTime = autoExploreTime - gameLoopLength;
+}
+
+//Passives
+function autoDownload() {
+	 if (autoDownloadTime == 0) {
+		 if (downloadAvailable) {
+			 download();
+		 }
+		 autoDownloadTime = autoDownloadTotal;
+	 } 
+	 autoDownloadTime = autoDownloadTime - gameLoopLength;
 }

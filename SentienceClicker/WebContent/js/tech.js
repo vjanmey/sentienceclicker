@@ -19,4 +19,12 @@ var autoExploreTech = {
 	cost:10
 };
 
-var techs = {'explore':exploreTech,'download':downloadTech,'autoExplore':autoExploreTech};
+var autoDownloadTech = {
+		passive:1,
+		functionName:"autoDownload",
+		tech:"auto-download-tech",
+		costName:"knowledge",
+		cost:10
+	};
+
+var techs = {'explore':exploreTech,'download':downloadTech,'autoExplore':autoExploreTech,'autoDownload':autoDownloadTech};
